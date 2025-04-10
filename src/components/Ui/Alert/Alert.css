@@ -1,0 +1,60 @@
+.alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 280px;
+  max-width: 400px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.4s ease-in-out;
+  z-index: 9999;
+  gap: 10px;
+}
+
+.alert-success {
+  background: linear-gradient(135deg, #00c851, #007e33);
+}
+
+.alert-error {
+  background: linear-gradient(135deg, #ff4444, #cc0000);
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, #ffbb33, #ff8800);
+  color: #000;
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #33b5e5, #0099cc);
+}
+
+.alert .close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: inherit;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: transform 0.2s;
+}
+
+.alert .close:hover {
+  transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

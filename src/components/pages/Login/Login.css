@@ -1,0 +1,117 @@
+/* src/components/Login/Login.css */
+.divLogin {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f9f9f9;
+}
+
+.padreForm {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.padreForm h1 {
+  margin-bottom: 20px;
+}
+
+.imgUsuarios {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.divForm {
+  margin-bottom: 20px;
+}
+
+.Inputs {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.buttonLogin, .buttonRegistrate {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+.buttonLogin:hover, .buttonRegistrate:hover {
+  background-color: #0056b3;
+}
+
+.buttonOlvido {
+  padding: 8px;
+  background-color: transparent;
+  color: #007bff;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.buttonOlvido:hover {
+  text-decoration: underline;
+}
+
+.divH4Button {
+  margin-top: 20px;
+}
+
+.social-buttons {
+  margin-bottom: 20px;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 16px;
+}
+
+.social-button img {
+  margin-right: 10px;
+}
+
+.social-button.google {
+  background-color: #fff;
+  border-color: #db4437;
+  color: #db4437;
+}
+
+.social-button.google:hover {
+  background-color: #db4437;
+  color: white;
+}
+
+.social-button.github {
+  background-color: #fff;
+  border-color: #24292e;
+  color: #24292e;
+}
+
+.social-button.github:hover {
+  background-color: #24292e;
+  color: white;
+}
+

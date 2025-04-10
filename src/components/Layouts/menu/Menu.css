@@ -1,0 +1,115 @@
+.menu {
+  background-color: #2c3e50;
+  color: white;
+  position: relative;
+  display: flex;
+  justify-content:space-around;
+ 
+}
+
+.menu-toggle {
+  font-size: 1.8rem;
+  cursor: pointer;
+  user-select: none;
+  display: none;
+}
+
+.menu-list {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  list-style: none;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-list li {
+  transition: background 0.3s ease;
+}
+
+.menu-list a,
+.menu-list button {
+  color: white;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.menu-list a:hover,
+.menu-list button:hover {
+  background-color: #34495e;
+}
+
+.password-reset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  background: #f2f2f2;
+  border-radius: 10px;
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.password-reset input {
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.password-reset button {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.password-reset button:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block;
+    color: white;
+    
+  }
+  .menu{
+    display: flex;
+    justify-content: start;
+  }
+
+  .menu-list {
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 70%;
+    background-color: #2c3e50;
+    display: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .menu-list.open {
+    display: flex;
+  }
+
+  .menu-list li {
+    text-align: center;
+    width: 100%;
+  }
+
+  .menu-list a,
+  .menu-list button {
+    width: 100%;
+    display: block;
+  }
+}
