@@ -10,9 +10,11 @@ import '../style/Dashboard.css'
 const Dashboard = () => {
   return (
     <div className="dashboard">
+     
       <Menu />
+      <h1 className='h1Micfor'> Bienvenido a el Gestor de Micfor </h1>
       <UserProfile />
-      <h1>Gestor de Archivos</h1>
+      
       <StoreSelector />
       <CategoryManager />
       <ProductManager />

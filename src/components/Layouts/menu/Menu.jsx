@@ -36,9 +36,16 @@ const Menu = () => {
 
   return (
     <nav className="menu">
-      <div className="menu-toggle" onClick={() => setMenuOpen(!menuOpen)}>
-        ☰
-      </div>
+      <div
+  className={`menu-toggle ${menuOpen ? 'open' : ''}`}
+  onClick={() => setMenuOpen(!menuOpen)}
+>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+
 
       <ul className={`menu-list ${menuOpen ? 'open' : ''}`}>
         <li><a href="#" onClick={() => setMenuOpen(false)}>Inicio</a></li>
@@ -46,12 +53,12 @@ const Menu = () => {
         <li><a href="#" onClick={() => setMenuOpen(false)}>Categorías</a></li>
         <li><a href="#" onClick={() => setMenuOpen(false)}>Productos</a></li>
         <li>
-          <button onClick={() => { handleSignOut(); setMenuOpen(false); }}>
+          <button className='btnMenu' onClick={() => { handleSignOut(); setMenuOpen(false); }}>
             Cerrar Sesión
           </button>
         </li>
         <li>
-          <button onClick={() => { setEmail(auth.currentUser?.email || ''); setMenuOpen(false); }}>
+          <button className='btnMenu' onClick={() => { setEmail(auth.currentUser?.email || ''); setMenuOpen(false); }}>
             Recuperar Contraseña
           </button>
         </li>

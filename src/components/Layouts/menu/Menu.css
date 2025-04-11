@@ -1,115 +1,208 @@
-.menu {
-  background-color: #2c3e50;
-  color: white;
-  position: relative;
-  display: flex;
-  justify-content:space-around;
- 
-}
-
-.menu-toggle {
-  font-size: 1.8rem;
-  cursor: pointer;
-  user-select: none;
-  display: none;
-}
-
-.menu-list {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  list-style: none;
-  align-items: center;
+/* Reset básico */
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
 
-.menu-list li {
-  transition: background 0.3s ease;
+/* Contenedor del menú */
+.menu {
+  display: flex;
+  justify-content:center;
+  background-color: #111;
+  padding: 1rem;
+  position: relative;
+  z-index: 1000;
+  border-bottom: 1px solid #333;
+  width: 100%;
+  --s: 37px;
+
+  --c: #0000, #282828 0.5deg 119.5deg, #0000 120deg;
+  --g1: conic-gradient(from 60deg at 56.25% calc(425% / 6), var(--c));
+  --g2: conic-gradient(from 180deg at 43.75% calc(425% / 6), var(--c));
+  --g3: conic-gradient(from -60deg at 50% calc(175% / 12), var(--c));
+  background: var(--g1), var(--g1) var(--s) calc(1.73 * var(--s)), var(--g2),
+    var(--g2) var(--s) calc(1.73 * var(--s)), var(--g3) var(--s) 0,
+    var(--g3) 0 calc(1.73 * var(--s)) #1e1e1e;
+  background-size: calc(2 * var(--s)) calc(3.46 * var(--s));
 }
 
-.menu-list a,
-.menu-list button {
-  color: white;
+/* Lista del menú */
+.menu-list {
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.menu-list li a,
+.menu-list li button {
   text-decoration: none;
-  background: transparent;
+  color: #f1f1f1;
+  background: none;
   border: none;
-  border-radius: 8px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: color 0.3s ease;
 }
 
-.menu-list a:hover,
-.menu-list button:hover {
-  background-color: #34495e;
+.menu-list li a:hover{
+  color: #ffc506;
 }
 
+/* Estilos para la sección de recuperación */
 .password-reset {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  background: #f2f2f2;
-  border-radius: 10px;
+  background: #1c1c1c;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 255, 153, 0.1);
+  margin: 1rem;
   max-width: 300px;
-  margin-left: auto;
-  margin-right: auto;
+  color: #f1f1f1;
 }
 
 .password-reset input {
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  border: 2px solid #00c97b;
+  border-radius: 8px;
+  background-color: #111;
+  color: #f1f1f1;
+}
+
+.password-reset input::placeholder {
+  color: #888;
 }
 
 .password-reset button {
-  background-color: #3498db;
-  color: white;
+  width: 100%;
+  padding: 0.5rem;
+  background-color: #00c97b;
   border: none;
-  border-radius: 6px;
+  color: #111;
+  font-weight: bold;
+  border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
 .password-reset button:hover {
-  background-color: #2980b9;
+  background-color: #00ff99;
 }
 
-/* Responsive Design */
+/* Icono de hamburguesa (oculto en PC por defecto) */
+.menu-toggle {
+  display: none; /* Oculto por defecto */
+  width: 30px;
+  height: 22px;
+  position: relative;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  z-index: 1100;
+}
+
+/* Barras del ícono hamburguesa */
+.menu-toggle span {
+  height: 4px;
+  background-color: #f1f1f1;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Animación al abrir */
+.menu-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+  background-color: #00ff99;
+}
+
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+  background-color: #00ff99;
+}
+
+/* Botones  */
+/* From Uiverse.io by joe-watson-sbf */ 
+.btnMenu {
+  font-size: 17px;
+  background: transparent;
+  border: none;
+  padding: 1em 1.5em;
+  color: #ffedd3;
+  text-transform: uppercase;
+  position: relative;
+  transition: 0.5s ease;
+  cursor: pointer;
+}
+
+.btnMenu::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 2px;
+  width: 0;
+  background-color: #ffc506;
+  transition: 0.5s ease;
+}
+
+.btnMenu:hover {
+  color: #000000;
+  transition-delay: 0.5s;
+}
+
+.btnMenu:hover::before {
+  width: 100%;
+}
+
+.btnMenu::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 0;
+  width: 100%;
+  background-color: #ffc506;
+  transition: 0.4s ease;
+  z-index: -1;
+}
+
+.btnMenu:hover::after {
+  height: 100%;
+  transition-delay: 0.4s;
+  color: aliceblue;
+}
+
+
+/* Responsive: solo visible en móviles */
 @media (max-width: 768px) {
   .menu-toggle {
-    display: block;
-    color: white;
-    
-  }
-  .menu{
     display: flex;
-    justify-content: start;
   }
 
   .menu-list {
     flex-direction: column;
+    background-color: #111;
     position: absolute;
     top: 100%;
     left: 0;
-    width: 70%;
-    background-color: #2c3e50;
-    display: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    right: 0;
+    overflow: hidden;
+    max-height: 0;
   }
 
   .menu-list.open {
-    display: flex;
+    max-height: 400px;
+    padding: 1rem 0;
   }
 
   .menu-list li {
-    text-align: center;
-    width: 100%;
-  }
-
-  .menu-list a,
-  .menu-list button {
-    width: 100%;
-    display: block;
+    padding: 0.5rem 0;
   }
 }
