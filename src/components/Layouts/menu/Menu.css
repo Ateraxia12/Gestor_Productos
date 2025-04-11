@@ -13,7 +13,7 @@
   padding: 1rem;
   position: relative;
   z-index: 1000;
-  border-bottom: 1px solid #333;
+  box-shadow: 10px 10px 10px 1px #00c97b;
   width: 100%;
   --s: 37px;
 
@@ -184,6 +184,7 @@
 @media (max-width: 768px) {
   .menu-toggle {
     display: flex;
+    
   }
 
   .menu-list {
@@ -195,14 +196,20 @@
     right: 0;
     overflow: hidden;
     max-height: 0;
+    
   }
 
   .menu-list.open {
-    max-height: 400px;
+    max-height: 600px;
     padding: 1rem 0;
   }
 
   .menu-list li {
     padding: 0.5rem 0;
+  }
+  .btnMenu:hover {
+    color: #ffffff;
+    
+    
   }
 }

@@ -1,4 +1,6 @@
+// src/components/Layouts/menu/Menu.js
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { signOut, sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../../../credenciales';
 import Alert from '../../Ui/Alert/Alert';
@@ -37,21 +39,20 @@ const Menu = () => {
   return (
     <nav className="menu">
       <div
-  className={`menu-toggle ${menuOpen ? 'open' : ''}`}
-  onClick={() => setMenuOpen(!menuOpen)}
->
-  <span></span>
-  <span></span>
-  <span></span>
-</div>
-
-
+        className={`menu-toggle ${menuOpen ? 'open' : ''}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 
       <ul className={`menu-list ${menuOpen ? 'open' : ''}`}>
-        <li><a href="#" onClick={() => setMenuOpen(false)}>Inicio</a></li>
-        <li><a href="#" onClick={() => setMenuOpen(false)}>Tiendas</a></li>
-        <li><a href="#" onClick={() => setMenuOpen(false)}>Categorías</a></li>
-        <li><a href="#" onClick={() => setMenuOpen(false)}>Productos</a></li>
+        <li><Link to="/" onClick={() => setMenuOpen(false)}>Inicio</Link></li>
+        <li><Link to="/tiendas" onClick={() => setMenuOpen(false)}>Tiendas</Link></li>
+        <li><Link to="/categorias" onClick={() => setMenuOpen(false)}>Categorías</Link></li>
+        <li><Link to="/productos" onClick={() => setMenuOpen(false)}>Productos</Link></li>
+        <li><Link to="/perfil" onClick={() => setMenuOpen(false)}>Perfil</Link></li> {/* Nueva opción para el perfil */}
         <li>
           <button className='btnMenu' onClick={() => { handleSignOut(); setMenuOpen(false); }}>
             Cerrar Sesión
