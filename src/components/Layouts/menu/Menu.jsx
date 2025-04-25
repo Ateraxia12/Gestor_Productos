@@ -52,6 +52,7 @@ const Menu = () => {
         <li><Link to="/tiendas" onClick={() => setMenuOpen(false)}>Tiendas</Link></li>
         <li><Link to="/categorias" onClick={() => setMenuOpen(false)}>Categorías</Link></li>
         <li><Link to="/productos" onClick={() => setMenuOpen(false)}>Productos</Link></li>
+        <li><Link to="/contacto" onClick={() => setMenuOpen(false)}>Contacto</Link></li>
         <li><Link to="/perfil" onClick={() => setMenuOpen(false)}>Perfil</Link></li> {/* Nueva opción para el perfil */}
         <li>
           <button className='btnMenu' onClick={() => { handleSignOut(); setMenuOpen(false); }}>

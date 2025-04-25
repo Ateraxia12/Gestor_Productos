@@ -2,14 +2,14 @@
 import React, { useState } from 'react';
 import '../Login/Login.css';
 import imgUsuarios from '../../../assets/images/imgUsuarios.png';
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  sendPasswordResetEmail, 
-  signInWithPopup, 
-  GoogleAuthProvider, 
-  GithubAuthProvider, 
-  FacebookAuthProvider 
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  signInWithPopup,
+  GoogleAuthProvider,
+  GithubAuthProvider,
+  FacebookAuthProvider
 } from 'firebase/auth';
 import { auth } from '../../../credenciales';
 import Alert from '../../Ui/Alert/Alert';
@@ -75,7 +75,7 @@ const Login = () => {
     }
   };
 
-  const handleFacebookSignIn = async () => {
+    const handleFacebookSignIn = async () => {
     const provider = new FacebookAuthProvider();
     try {
       await signInWithPopup(auth, provider);
@@ -89,7 +89,7 @@ const Login = () => {
     <div className="divLogin">
       <div className="padreForm">
         <div>
-          <h1>Este es el Login</h1>
+          <h1>{registrando ? "Registro" : "Login"}</h1>
           <img src={imgUsuarios} alt="Usuarios" className="imgUsuarios" />
         </div>
         <form className="divForm" onSubmit={functAutenticacion}>

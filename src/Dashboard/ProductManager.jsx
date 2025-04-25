@@ -1,4 +1,3 @@
-// src/components/Dashboard/ProductManager.js
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { collection, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '../credenciales';
@@ -12,10 +11,13 @@ const ProductManager = () => {
   const [newProductPrice, setNewProductPrice] = useState('');
   const [newProductCategory, setNewProductCategory] = useState('');
   const [newProductStore, setNewProductStore] = useState('');
-  const [newProductBrand, setNewProductBrand] = useState(''); // Nuevo campo para marca
-  const [newProductUnit, setNewProductUnit] = useState(''); // Nuevo campo para unidad de medida
+  const [newProductBrand, setNewProductBrand] = useState('');
+  const [newProductUnit, setNewProductUnit] = useState('');
   const [editingProductId, setEditingProductId] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  const [selectedProductId, setSelectedProductId] = useState('');
+  const [comparisonMonths, setComparisonMonths] = useState([]);
+  const [fullPriceHistory, setFullPriceHistory] = useState([]);
 
   // Filtros activos
   const [filterName, setFilterName] = useState('');
@@ -33,17 +35,22 @@ const ProductManager = () => {
   const [selectedStore, setSelectedStore] = useState('');
 
   const [uniqueStores, setUniqueStores] = useState([]);
-
-  // Estado para la alerta
   const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
       const querySnapshot = await getDocs(collection(db, 'products'));
-      const fetchedProducts = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const fetchedProducts = querySnapshot.docs.map(doc => {
+        const data = doc.data();
+        // Inicializar priceHistory si no existe
+        const priceHistory = data.priceHistory || [{ price: data.price || 0, date: new Date().toISOString() }];
+        return {
+          id: doc.id,
+          ...data,
+          priceHistory,
+        };
+      });
       setProducts(fetchedProducts);
-
-      // Obtener tiendas únicas
       const stores = [...new Set(fetchedProducts.map(p => p.store))];
       setUniqueStores(stores);
     };
@@ -57,24 +64,28 @@ const ProductManager = () => {
     }
 
     try {
+      const price = parseFloat(newProductPrice);
+      const priceHistory = [{ price, date: new Date().toISOString() }];
       const productRef = await addDoc(collection(db, 'products'), {
         name: newProductName,
         description: newProductDescription,
-        price: parseFloat(newProductPrice),
+        price,
         category: newProductCategory,
         store: newProductStore,
-        brand: newProductBrand, // Incluir marca
-        unit: newProductUnit, // Incluir unidad de medida
+        brand: newProductBrand,
+        unit: newProductUnit,
+        priceHistory,
       });
-      const newProduct = { 
-        id: productRef.id, 
-        name: newProductName, 
-        description: newProductDescription, 
-        price: parseFloat(newProductPrice), 
-        category: newProductCategory, 
-        store: newProductStore, 
-        brand: newProductBrand, // Incluir marca
-        unit: newProductUnit, // Incluir unidad de medida
+      const newProduct = {
+        id: productRef.id,
+        name: newProductName,
+        description: newProductDescription,
+        price,
+        category: newProductCategory,
+        store: newProductStore,
+        brand: newProductBrand,
+        unit: newProductUnit,
+        priceHistory,
       };
       setProducts(prevProducts => [...prevProducts, newProduct]);
       setNewProductName('');
@@ -82,8 +93,8 @@ const ProductManager = () => {
       setNewProductPrice('');
       setNewProductCategory('');
       setNewProductStore('');
-      setNewProductBrand(''); // Limpiar campo de marca
-      setNewProductUnit(''); // Limpiar campo de unidad de medida
+      setNewProductBrand('');
+      setNewProductUnit('');
       setAlert({ type: 'success', message: 'Producto agregado correctamente.' });
     } catch (error) {
       console.error('Error al agregar el producto: ', error);
@@ -98,44 +109,59 @@ const ProductManager = () => {
     }
 
     try {
+      const price = parseFloat(newProductPrice);
+      const currentProduct = products.find(p => p.id === editingProductId);
+      const currentPriceHistory = currentProduct.priceHistory || [];
+      const lastPriceEntry = currentPriceHistory.length > 0 ? currentPriceHistory[currentPriceHistory.length - 1] : null;
+      
+      // Determinar si se debe añadir una nueva entrada
+      let updatedPriceHistory = [...currentPriceHistory];
+      if (!lastPriceEntry || lastPriceEntry.price !== price) {
+        updatedPriceHistory = [...currentPriceHistory, { price, date: new Date().toISOString() }];
+      }
+
       const productRef = doc(db, 'products', editingProductId);
       await updateDoc(productRef, {
         name: newProductName,
         description: newProductDescription,
-        price: parseFloat(newProductPrice),
+        price,
         category: newProductCategory,
         store: newProductStore,
-        brand: newProductBrand, // Incluir marca
-        unit: newProductUnit, // Incluir unidad de medida
+        brand: newProductBrand,
+        unit: newProductUnit,
+        priceHistory: updatedPriceHistory,
       });
-      setProducts(prevProducts => prevProducts.map(product => 
-        product.id === editingProductId ? 
-        { 
-          id: product.id, 
-          name: newProductName, 
-          description: newProductDescription, 
-          price: parseFloat(newProductPrice), 
-          category: newProductCategory, 
-          store: newProductStore, 
-          brand: newProductBrand, // Incluir marca
-          unit: newProductUnit, // Incluir unidad de medida
-        } : 
-        product
-      ));
+      setProducts(prevProducts =>
+        prevProducts.map(product =>
+          product.id === editingProductId
+            ? {
+                ...product,
+                name: newProductName,
+                description: newProductDescription,
+                price,
+                category: newProductCategory,
+                store: newProductStore,
+                brand: newProductBrand,
+                unit: newProductUnit,
+                priceHistory: updatedPriceHistory,
+              }
+            : product
+        )
+      );
       setEditingProductId(null);
       setNewProductName('');
       setNewProductDescription('');
       setNewProductPrice('');
       setNewProductCategory('');
       setNewProductStore('');
-      setNewProductBrand(''); // Limpiar campo de marca
-      setNewProductUnit(''); // Limpiar campo de unidad de medida
+      setNewProductBrand('');
+      setNewProductUnit('');
       setAlert({ type: 'success', message: 'Producto actualizado correctamente.' });
     } catch (error) {
       console.error('Error al actualizar el producto: ', error);
       setAlert({ type: 'error', message: 'Error al actualizar el producto.' });
     }
-  }, [editingProductId, newProductName, newProductDescription, newProductPrice, newProductCategory, newProductStore, newProductBrand, newProductUnit]);
+  }, [editingProductId, newProductName, newProductDescription, newProductPrice, newProductCategory, newProductStore, newProductBrand, newProductUnit, products]);
 
   const handleEditProduct = useCallback((product) => {
     setEditingProductId(product.id);
@@ -144,8 +170,8 @@ const ProductManager = () => {
     setNewProductPrice(product.price.toString());
     setNewProductCategory(product.category);
     setNewProductStore(product.store);
-    setNewProductBrand(product.brand || ''); // Incluir marca
-    setNewProductUnit(product.unit || ''); // Incluir unidad de medida
+    setNewProductBrand(product.brand || '');
+    setNewProductUnit(product.unit || '');
   }, []);
 
   const handleDeleteProduct = useCallback(async (productId) => {
@@ -173,7 +199,6 @@ const ProductManager = () => {
       (!filterPriceMax || product.price <= parseFloat(filterPriceMax))
     );
     const selectedStoreMatch = selectedStore ? product.store === selectedStore : true;
-
     return nameMatch && storeMatch && categoryMatch && priceMatch && selectedStoreMatch;
   }), [products, filterName, filterStore, filterCategory, filterPriceMin, filterPriceMax, selectedStore]);
 
@@ -195,6 +220,40 @@ const ProductManager = () => {
     setAlert(null);
   }, []);
 
+  const comparePricesByMonth = useCallback(() => {
+    if (!selectedProductId) {
+      setAlert({ type: 'error', message: 'Selecciona un producto para comparar.' });
+      return;
+    }
+    const product = products.find(p => p.id === selectedProductId);
+    if (!product || !product.priceHistory || product.priceHistory.length === 0) {
+      setAlert({ type: 'error', message: 'No hay historial de precios para este producto.' });
+      return;
+    }
+
+    // Guardar el historial completo
+    setFullPriceHistory(product.priceHistory);
+
+    // Agrupar precios por mes, tomando el precio más reciente
+    const monthlyPrices = product.priceHistory.reduce((acc, entry) => {
+      const date = new Date(entry.date);
+      const monthYear = `${date.getFullYear()}-${date.getMonth() + 1}`;
+      acc[monthYear] = { price: entry.price, date: entry.date }; // Último precio del mes
+      return acc;
+    }, {});
+
+    // Convertir a un arreglo ordenado por fecha
+    const comparisonData = Object.keys(monthlyPrices)
+      .map(key => ({
+        month: key,
+        price: monthlyPrices[key].price,
+        date: monthlyPrices[key].date,
+      }))
+      .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    setComparisonMonths(comparisonData);
+  }, [selectedProductId, products]);
+
   return (
     <div className="product-manager">
       <h2>Gestión de Productos</h2>
@@ -203,7 +262,6 @@ const ProductManager = () => {
 
       <div className="filters">
         <h3>Filtros individuales</h3>
-
         <div>
           <input
             type="text"
@@ -213,7 +271,6 @@ const ProductManager = () => {
           />
           <button onClick={() => setFilterName(inputName)}>Buscar</button>
         </div>
-
         <div>
           <input
             type="text"
@@ -223,7 +280,6 @@ const ProductManager = () => {
           />
           <button onClick={() => setFilterStore(inputStore)}>Buscar</button>
         </div>
-
         <div>
           <input
             type="text"
@@ -233,7 +289,6 @@ const ProductManager = () => {
           />
           <button onClick={() => setFilterCategory(inputCategory)}>Buscar</button>
         </div>
-
         <div>
           <input
             type="number"
@@ -243,7 +298,6 @@ const ProductManager = () => {
           />
           <button onClick={() => setFilterPriceMin(inputPriceMin)}>Buscar</button>
         </div>
-
         <div>
           <input
             type="number"
@@ -253,7 +307,6 @@ const ProductManager = () => {
           />
           <button onClick={() => setFilterPriceMax(inputPriceMax)}>Buscar</button>
         </div>
-
         <div>
           <label>Filtrar por tienda:</label>
           <select value={selectedStore} onChange={(e) => setSelectedStore(e.target.value)}>
@@ -263,7 +316,6 @@ const ProductManager = () => {
             ))}
           </select>
         </div>
-
         <button onClick={clearFilters}>Ver todos los productos</button>
       </div>
 
@@ -344,6 +396,69 @@ const ProductManager = () => {
         <button onClick={editingProductId ? handleUpdateProduct : handleAddProduct}>
           {editingProductId ? 'Actualizar Producto' : 'Agregar Producto'}
         </button>
+      </div>
+
+      <div className="price-comparison">
+        <h3>Comparar Precios por Mes</h3>
+        <div>
+          <label>Seleccionar producto:</label>
+          <select
+            value={selectedProductId}
+            onChange={(e) => setSelectedProductId(e.target.value)}
+          >
+            <option value="">-- Selecciona un producto --</option>
+            {products.map(product => (
+              <option key={product.id} value={product.id}>
+                {product.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <button onClick={comparePricesByMonth}>Comparar Precios</button>
+        
+        {fullPriceHistory.length > 0 && (
+          <div className="full-history">
+            <h4>Historial Completo de Precios</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Fecha</th>
+                  <th>Precio</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fullPriceHistory.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{new Date(entry.date).toLocaleString()}</td>
+                    <td>${entry.price.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {comparisonMonths.length > 0 && (
+          <div className="comparison-results">
+            <h4>Precios por Mes</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>Mes</th>
+                  <th>Precio</th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonMonths.map((entry, index) => (
+                  <tr key={index}>
+                    <td>{entry.month}</td>
+                    <td>${entry.price.toFixed(2)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <div className="price-calculation">
